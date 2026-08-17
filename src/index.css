@@ -1,0 +1,219 @@
+@import 'tailwindcss';
+
+/*
+ * Hicup design system.
+ * Runtime-swappable values live on :root as raw custom properties; @theme maps
+ * them into Tailwind's color/spacing namespaces so utilities stay declarative.
+ */
+
+:root {
+  color-scheme: dark;
+
+  /* Neutral ramp — near-black cinematic base */
+  --c-bg: oklch(0.16 0.006 275);
+  --c-bg-deep: oklch(0.12 0.006 275);
+  --c-surface: oklch(0.21 0.008 275);
+  --c-surface-2: oklch(0.26 0.009 275);
+  --c-line: oklch(0.32 0.01 275);
+  --c-text: oklch(0.98 0.002 275);
+  --c-muted: oklch(0.72 0.012 275);
+  --c-faint: oklch(0.55 0.012 275);
+
+  /* Accent — overridable from settings */
+  --c-accent: oklch(0.79 0.15 78);
+  --c-accent-soft: oklch(0.79 0.15 78 / 0.16);
+  --c-on-accent: oklch(0.16 0.02 78);
+
+  --c-danger: oklch(0.66 0.19 25);
+
+  --radius: 0.875rem;
+  --header-h: 3.5rem;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur: 220ms;
+}
+
+:root[data-accent='iris'] {
+  --c-accent: oklch(0.68 0.18 285);
+  --c-accent-soft: oklch(0.68 0.18 285 / 0.18);
+  --c-on-accent: oklch(0.99 0.005 285);
+}
+:root[data-accent='mint'] {
+  --c-accent: oklch(0.8 0.14 168);
+  --c-accent-soft: oklch(0.8 0.14 168 / 0.16);
+  --c-on-accent: oklch(0.18 0.03 168);
+}
+:root[data-accent='rose'] {
+  --c-accent: oklch(0.71 0.18 15);
+  --c-accent-soft: oklch(0.71 0.18 15 / 0.18);
+  --c-on-accent: oklch(0.99 0.005 15);
+}
+:root[data-accent='ice'] {
+  --c-accent: oklch(0.79 0.13 225);
+  --c-accent-soft: oklch(0.79 0.13 225 / 0.16);
+  --c-on-accent: oklch(0.17 0.03 225);
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+  --c-bg: oklch(0.985 0.003 275);
+  --c-bg-deep: oklch(0.95 0.004 275);
+  --c-surface: oklch(1 0 0);
+  --c-surface-2: oklch(0.96 0.004 275);
+  --c-line: oklch(0.89 0.006 275);
+  --c-text: oklch(0.21 0.01 275);
+  --c-muted: oklch(0.45 0.012 275);
+  --c-faint: oklch(0.6 0.012 275);
+}
+
+@theme inline {
+  --color-bg: var(--c-bg);
+  --color-bg-deep: var(--c-bg-deep);
+  --color-surface: var(--c-surface);
+  --color-surface-2: var(--c-surface-2);
+  --color-line: var(--c-line);
+  --color-text: var(--c-text);
+  --color-muted: var(--c-muted);
+  --color-faint: var(--c-faint);
+  --color-accent: var(--c-accent);
+  --color-accent-soft: var(--c-accent-soft);
+  --color-on-accent: var(--c-on-accent);
+  --color-danger: var(--c-danger);
+
+  --radius-card: var(--radius);
+
+  --font-sans:
+    'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial,
+    sans-serif;
+
+  --animate-rise: rise 300ms var(--ease-out) both;
+  --animate-fade: fade 200ms var(--ease-out) both;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    background-color: var(--c-bg);
+    color: var(--c-text);
+    font-family: var(--font-sans);
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'ss01';
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior-y: none;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--c-accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Hide focus rings for pointer users but never for keyboard users. */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  h1,
+  h2,
+  h3 {
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  input,
+  textarea,
+  select,
+  button {
+    font: inherit;
+    color: inherit;
+  }
+
+  ::selection {
+    background: var(--c-accent);
+    color: var(--c-on-accent);
+  }
+}
+
+@layer utilities {
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-slim {
+    scrollbar-width: thin;
+    scrollbar-color: var(--c-line) transparent;
+  }
+
+  .glass {
+    background: color-mix(in oklab, var(--c-surface) 62%, transparent);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+  }
+
+  .pad-safe-b {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .pad-safe-t {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+
+  .snap-feed {
+    scroll-snap-type: y mandatory;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  .snap-feed > * {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Honour the reduced-motion toggle in Settings as well as the OS setting. */
+:root[data-motion='reduced'] *,
+:root[data-motion='reduced'] *::before,
+:root[data-motion='reduced'] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
